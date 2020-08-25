@@ -23,9 +23,13 @@ Het doelpubliek voor deze applicatie zijn mensen met een beperking en hun begele
     * Wanneer een andere gebruiker nu een parkeerplaats gaat zoeken in hetzelfde gebied, gaat deze parkeerplaats niet meegerekend worden in het totaal aantal vrije parkeerplaatsen
 
 ## Datamodel
+![Datamodel](https://seanachaidh.be/afbeeldingen/handyparking.png)
+
 Hier volgt het datamodel van de applicatie. Het model bevat vijf tabellen. Vier van deze tabellen worden gebruikt voor het opslagen van de eigenlijke gebruikersdata. De vijfde tabel wordt gebruikt voor het opslagen van authenticatie tokens. Deze tokens kunnen gebruikt worden in plaats van gebruikersnaam en wachtwoord zodat de gebruiker niet altijd opnieuw hoeft aan te loggen. Deze tokens kunnen opgeslagen worden in cookies voor een web frontend of lokaal voor de android en iPhone applicatie. Van de vier tabellen met gebruikersdata gaan klassen gemaakt worden. Deze tabellen zullen dus ook voorkomen in het UML diagram dat in de volgende sectie uitgelegd wordt.
 
 ## Objectmodel
+![Objectmodel](https://seanachaidh.be/afbeeldingen/objectmodel.png)
+
 In deze sectie leggen we het objectmodel voor de back-end uit. Het objectmodel voor deze applicatie is vrij simpel en komt vrijwel geheel overeen met het datamodel. De grootste en meest centrale klasse is de user klasse. Gebruikers staan centraal in onze applicatie. Alles gaat uit van de gebruiker. De user klasse is een compositie klasse bestaande uit authenticatie tokens, een geschiedenis van recent bezochte parkeerplekken en een lijst met favoriete gebieden. Er is slechts één klasse die niet direct verbonden is met de user klasse. Deze klasse is de coordinate klasse. Deze klasse is een extra abstractie geïntroduceerd om het werken met coordinaten te vergemakkelijken. Elk van de de klassen stelt een “resource” voor. Entiteiten die beschikbaar gesteld gaan worden door de back-end via een REST API. Deze REST API gaat voor iedere resource een route hebben waarop de gebruikelijke REST werkwoorden van toepassing zijn. Op deze manier gaat de back-end server de gebruikelijke CRUD operaties ondersteunen
 
 ## REST-API
