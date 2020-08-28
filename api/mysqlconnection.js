@@ -59,16 +59,9 @@ function createWhere(obj) {
 }
 
 function connect(cb) {
-    mysql_connection = mysql.createConnection(dataconfiguration);
-    mysql_connection.connect(function(err){
-        if (err != null) {
-            throw err;
-        } else {
-            console.log('Successfully connected');
-            connected = true;
-        }
-        cb();
-    });
+    mysql_connection = mysql.createPool(dataconfiguration);
+    cb();
+    return mysql_connection;
 }
 
 function disconnect() {
@@ -76,7 +69,7 @@ function disconnect() {
 }
 
 function performInsert(table, vals, cb) {
-    if(connected) {
+    mysql_connection.getConnection(function(err, connection){
         var keys = Object.keys(vals);
         var values = Object.values(vals);
 
@@ -85,25 +78,29 @@ function performInsert(table, vals, cb) {
 
         var sql_string = "insert into " + table + list_keys + " values" + list_values + ";";
         console.log('Executing sql: ' + sql_string);
-        mysql_connection.query(sql_string, cb); //hopelijk hebben we nu geen sql injectie
+        connection.query(sql_string, cb); //hopelijk hebben we nu geen sql injectie
+    });
 
-    } else {
-        console.log('Error: Database not connected');
-    }
 }
 
 function removeAllFromTable(table, cb) {
-    var qstring = 'delete from ' + table;
-    return mysql_connection.query(qstring, cb);
-
+    mysql_connection.getConnection(function(err, connection){
+        var qstring = 'delete from ' + table;
+        return connection.query(qstring, cb);        
+    });
 }
 
 function performSelect(table, whereclause, cb) {
-    var wherestring = createWhere(whereclause);
-    var full_selection = 'select * from ' + table + ' ' + wherestring;
-    console.log("performSelect querystring: " + full_selection);
-    return mysql_connection.query(full_selection, cb)
+    mysql_connection.getConnection(function(err, connection) {
+        if(err) throw err;
+        var wherestring = createWhere(whereclause);
+        var full_selection = 'select * from ' + table + ' ' + wherestring;
+        console.log("performSelect querystring: " + full_selection);
+        return connection.query(full_selection, cb)
+    });
+
 }
+
 exports.connect = connect;
 exports.disconnect = disconnect;
 exports.createWhere = createWhere;

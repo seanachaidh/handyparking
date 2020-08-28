@@ -21,12 +21,12 @@ describe('MYSQL', function(){
         });
     });
     after(function(done){
-        
         connection.removeAllFromTable('Users', function(err, result) {
             if(err) throw err;
+            connection.disconnect();
             done();
         });
-        connection.disconnect();
+        
     })
     describe('#createWhere', function() {
         it('Should create a mysql where clause', function() {
