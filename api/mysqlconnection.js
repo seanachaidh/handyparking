@@ -65,18 +65,21 @@ function createWhereClause(obj) {
     var keys = Object.keys(obj);
     var values = Object.values(obj);
     
-    var result = 'where ';
-
-    for(i=0; i<keys.length; i++) {
-        var current_key = keys[i];
-        var current_value = values[i]
-        if(i == 0) {
-            result += current_key + '="' + current_value + '"'
-        } else {
-            result += ' and ' + current_key + '="' + current_value + '"'
+    if(keys.length == 0) {
+        return '';
+    } else {
+        var result = 'where ';
+        for(i=0; i<keys.length; i++) {
+            var current_key = keys[i];
+            var current_value = values[i]
+            if(i == 0) {
+                result += current_key + '="' + current_value + '"'
+            } else {
+                result += ' and ' + current_key + '="' + current_value + '"'
+            }
         }
+        return result;        
     }
-    return result;
 }
 
 function connect(cb) {
