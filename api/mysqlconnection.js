@@ -12,6 +12,27 @@ function zip(a1, a2) {
     return 
 }
 
+function createIdObj(idcol, id) {
+    var retval = {};
+    retval[idcol] = id;
+    return retval;
+}
+
+function createSetClause(vals) {
+    var retval = 'SET ';
+    var vals_keys = Object.keys(vals);
+    var vals_values = Object.values(vals);
+    var i = 0;
+    var tmpval = [];
+    var tmpstring = ''
+
+    for(i = 0; i < vals_keys.length; i++) {
+        tmpval.push(vals_keys[i] + '="' + vals_values[i]+'"');
+    }
+    tmpstring = tmpval.join(',');
+    return retval + tmpstring;
+}
+
 function quoteString(s,v) {
     if(v) {
         return '"' + s + '"';
@@ -39,7 +60,7 @@ function listToString(l, v) {
     return result;
 }
 
-function createWhere(obj) {
+function createWhereClause(obj) {
     var i;
     var keys = Object.keys(obj);
     var values = Object.values(obj);
@@ -83,6 +104,26 @@ function performInsert(table, vals, cb) {
 
 }
 
+exports.performUpdate = function(table, vals, idobj, id, cb){
+    mysql_connection.getConnection(function(err, connection) {
+        var set_string = createSetClause(vals);
+        var where_string = createWhereClause(createIdObj(idobj, id));
+        var query = "update " + table + ' ' + set_string + ' ' + where_string + ';'
+        console.log("Performing update query: " + query);
+        connection.query(query, cb);
+    });
+}
+
+exports.performDelete = function(table, idcol, id, cb) {
+    mysql_connection.getConnection(function(err, connection){
+        var clause = createIdObj(idcol, id);
+        var whereclause = createWhereClause(clause);
+        var sql_string = "delete from " + table + + " " . whereclause;
+        
+        connection.query(sql_string, cb);
+    });
+};
+
 function removeAllFromTable(table, cb) {
     mysql_connection.getConnection(function(err, connection){
         var qstring = 'delete from ' + table;
@@ -93,7 +134,7 @@ function removeAllFromTable(table, cb) {
 function performSelect(table, whereclause, cb) {
     mysql_connection.getConnection(function(err, connection) {
         if(err) throw err;
-        var wherestring = createWhere(whereclause);
+        var wherestring = createWhereClause(whereclause);
         var full_selection = 'select * from ' + table + ' ' + wherestring;
         console.log("performSelect querystring: " + full_selection);
         return connection.query(full_selection, cb)
@@ -103,9 +144,10 @@ function performSelect(table, whereclause, cb) {
 
 exports.connect = connect;
 exports.disconnect = disconnect;
-exports.createWhere = createWhere;
+exports.createWhereClause = createWhereClause;
 exports.listToString = listToString;
 exports.connect = connect;
 exports.performSelect = performSelect;
 exports.performInsert = performInsert;
 exports.removeAllFromTable = removeAllFromTable;
+exports.createSetClause = createSetClause
