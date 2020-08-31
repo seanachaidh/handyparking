@@ -2,6 +2,14 @@ exports.getParking = function(req, res) {
 
 };
 
+exports.createParking = function(req, res) {
+
+};
+
+exports.deleteParking = function(req, res) {
+
+};
+
 exports.getAllParking = function(req, res) {
 
 };
