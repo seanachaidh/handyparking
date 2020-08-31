@@ -69,23 +69,78 @@ exports.updateUser = function(req, res) {
     });
 };
 
-
 /**
  * Deze twee functies moeten misschien in een apart bestand komen
  */
 
 exports.createArea = function(req, res) {
+    var uid = req.params.id;
+    
+    var x1 = req.params.x1;
+    var x2 = req.params.x2;
+    var y1 = req.params.y1;
+    var y2 = req.params.y2;
+    var name = req.params.y2;
+
+    var area = {
+        "name": name,
+        "x1": x1,
+        "x2": x2,
+        "y1": y1,
+        "y2": y2
+    };
+
+    //first we create the area
+    con.performInsert('Area', area, function(err, result){
+        if(err) throw err;
+        var aid = result.insertId;
+        //Nu dat we een gebied hebben kunnen we het in de favorieten van de gebruiker opslaan
+        var fave = {
+            "Users_idUsers": uid,
+            "Area_idArea": aid,
+            "rating": 0.0
+        };
+        con.performInsert("Favorites", fave, function(err){
+            if(err) throw err;
+            console.log("Favoriet toegevoegd: " + JSON.stringify(fave));
+            res.json({"result": true});
+        });
+    });
 
 };
 
 exports.getArea = function(req, res) {
-
+    var uid = res.params.uid;
+    var aid = res.params.aid;
+    con.performSelect('Area', {
+        "idArea": aid
+    }, function(err, result, fields){
+        if(err) throw err;
+        var r = result[0];
+        con.performSelect('Favorites', {
+            "Users_idUsers": uid,
+            "Area_idArea": aid
+        }, function(err, results, fields){
+            if(err) throw err;
+            var final = results[0];
+            r["rating"] = final["rating"];
+            res.json(r);
+        })
+    })
 };
 
 exports.getAllArea = function(req, res) {
-
+    con.performSelect('Area', {}, function(err, result, fields){
+        if(err) throw err;
+        res.json(result);
+    });
 };
 
+//Dit is de eerste keer dat ik het result object in een one liner schrijf.
+//Ik ga het de volgende keer ook zo doen
 exports.deleteArea = function(req, res) {
-
+    var aid;
+    con.performDelete('Area', 'idArea', aid, function(err){
+        res.json({"result": (err != null)})
+    });
 };
