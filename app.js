@@ -22,7 +22,7 @@ app.put('/user/:id', api.users.updateUser);
 //User area
 app.get('/user/:uid/area/:aid', api.users.getArea);
 app.delete('/user/:uid/area/:aid', api.users.deleteArea);
-app.post('/user/:uid/area', api.users.createParking);
+app.post('/user/:uid/area', api.users.createArea);
 app.get('/user/:uid/area', api.users.getAllArea);
 
 
@@ -32,6 +32,7 @@ app.post('/parkingspot', api.parking.createParking);
 app.get('/parkingspot/:id', api.parking.getParking);
 app.delete('/parkingspot/:id', api.parking.deleteParking);
 app.put('/parkingspot/:id', api.parking.occupyParking);
+app.get('/parkingspot/area/:aid', api.parking.getAllParkingForArea);
 
 app.listen(3000, function(){
     console.log("Server has been started");

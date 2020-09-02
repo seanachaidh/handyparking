@@ -26,10 +26,10 @@ DROP TABLE IF EXISTS `handyparking`.`Area` ;
 CREATE TABLE IF NOT EXISTS `handyparking`.`Area` (
   `idArea` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  `cx1` DOUBLE NOT NULL,
-  `cx2` DOUBLE NOT NULL,
-  `cy1` DOUBLE NOT NULL,
-  `cy2` DOUBLE NOT NULL,
+  `x1` DOUBLE NOT NULL,
+  `x2` DOUBLE NOT NULL,
+  `y1` DOUBLE NOT NULL,
+  `y2` DOUBLE NOT NULL,
   PRIMARY KEY (`idArea`))
 ENGINE = InnoDB;
 
@@ -111,8 +111,8 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `handyparking`.`ParkingSpots` ;
 
 CREATE TABLE IF NOT EXISTS `handyparking`.`ParkingSpots` (
-  `cx1` DOUBLE NOT NULL,
-  `cx2` DOUBLE NOT NULL,
+  `x` DOUBLE NOT NULL,
+  `y` DOUBLE NOT NULL,
   `idParkingSpots` INT NOT NULL AUTO_INCREMENT,
   `occupied` TINYINT NULL DEFAULT 0,
   PRIMARY KEY (`idParkingSpots`))
