@@ -1,0 +1,6 @@
+<!--
+    Dit is een STUB. Verander RootURL
+-->
+<configuration>
+    <rooturl>localhost:3000</rooturl>
+</configuration>
