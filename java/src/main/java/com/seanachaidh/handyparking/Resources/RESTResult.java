@@ -1,10 +1,13 @@
 package com.seanachaidh.handyparking.Resources;
 
-import com.google.gson.JsonElement;
-
 public class RESTResult {
-    public JsonElement result;
+    public Object result;
     public boolean success;
+
+    public RESTResult(Object result, boolean success) {
+        this.result = result;
+        this.success = success;
+    }
 
     @Override
     public int hashCode() {
@@ -30,10 +33,4 @@ public class RESTResult {
             return false;
         return true;
     }
-
-    public RESTResult(JsonElement result, boolean success) {
-        this.result = result;
-        this.success = success;
-    }
-
 }

@@ -2,7 +2,10 @@ package com.seanachaidh.handyparking;
 
 import java.util.ArrayList;
 
+import com.google.gson.annotations.SerializedName;
+
 public class User {
+    @SerializedName("idUsers")
     private int id;
     private String name, password, email;
     private boolean guide;

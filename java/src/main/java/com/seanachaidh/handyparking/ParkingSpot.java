@@ -1,6 +1,9 @@
 package com.seanachaidh.handyparking;
 
+import com.google.gson.annotations.SerializedName;
+
 public class ParkingSpot {
+    @SerializedName("idParkingSpots")
     private int id;
     private boolean occupied;
     private Coordinate c;
