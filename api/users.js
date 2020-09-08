@@ -1,8 +1,12 @@
 const con = require('./mysqlconnection');
+
 exports.getUsers = function(req, res) {
     vals = {};
     con.performSelect('Users', vals, function(err, results, fields){
         if(err) throw err;
+        results.forEach(element => {
+            element.guide = Boolean(element.guide);
+        });
         res.json(results);
     });
 }
@@ -14,8 +18,7 @@ exports.getUser = function (req, res) {
     };
     con.performSelect('Users', vals, function(err, results, fields){
         if(err) throw err;
-        var user = results[0];
-        res.json(user);
+        res.json(results);
     });
 };
 
@@ -124,7 +127,7 @@ exports.getArea = function(req, res) {
             if(err) throw err;
             var final = results[0];
             r["rating"] = final["rating"];
-            res.json(r);
+            res.json([r]);
         })
     })
 };

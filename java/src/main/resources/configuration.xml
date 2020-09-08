@@ -2,5 +2,5 @@
     Dit is een STUB. Verander RootURL
 -->
 <configuration>
-    <rooturl>localhost:3000</rooturl>
+    <rooturl>http://localhost:3000</rooturl>
 </configuration>
