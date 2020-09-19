@@ -2,9 +2,14 @@ const express = require('express');
 const api = require('./api/api');
 const bodyParser = require('body-parser');
 
+const fs = require('fs');
+var configuration = JSON.parse(fs.readFileSync('env.json', 'utf-8'));
+var serverConfig = configuration["server"];
+
 const port = 3000
 
 const app = express();
+var indexRouter = express.Router()
 
 //middleware
 app.use(bodyParser.urlencoded());
@@ -14,25 +19,29 @@ api.database.connect(function(){
 });
 
 //users
-app.get('/user', api.users.getUsers);
-app.get('/user/:id', api.users.getUser);
-app.post('/user', api.users.createUser);
-app.put('/user/:id', api.users.updateUser);
+indexRouter.get('/user', api.users.getUsers);
+indexRouter.get('/user/:id', api.users.getUser);
+indexRouter.post('/user', api.users.createUser);
+indexRouter.put('/user/:id', api.users.updateUser);
 
 //User area
-app.get('/user/:uid/area/:aid', api.users.getArea);
-app.delete('/user/:uid/area/:aid', api.users.deleteArea);
-app.post('/user/:uid/area', api.users.createArea);
-app.get('/user/:uid/area', api.users.getAllArea);
+indexRouter.get('/user/:uid/area/:aid', api.users.getArea);
+indexRouter.delete('/user/:uid/area/:aid', api.users.deleteArea);
+indexRouter.post('/user/:uid/area', api.users.createArea);
+indexRouter.get('/user/:uid/area', api.users.getAllArea);
 
 
 //parkingspot
-app.get('/parkingspot', api.parking.getAllParking);
-app.post('/parkingspot', api.parking.createParking);
-app.get('/parkingspot/:id', api.parking.getParking);
-app.delete('/parkingspot/:id', api.parking.deleteParking);
-app.put('/parkingspot/:id', api.parking.occupyParking);
-app.get('/parkingspot/area/:aid', api.parking.getAllParkingForArea);
+indexRouter.get('/parkingspot', api.parking.getAllParking);
+indexRouter.post('/parkingspot', api.parking.createParking);
+indexRouter.get('/parkingspot/:id', api.parking.getParking);
+indexRouter.delete('/parkingspot/:id', api.parking.deleteParking);
+indexRouter.put('/parkingspot/:id', api.parking.occupyParking);
+indexRouter.get('/parkingspot/area/:aid', api.parking.getAllParkingForArea);
+
+console.log('Used root: ' + serverConfig["baseUrl"]);
+
+app.use(serverConfig["baseUrl"], indexRouter);
 
 app.listen(3000, function(){
     console.log("Server has been started");
