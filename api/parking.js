@@ -45,36 +45,47 @@ function isInArea(point, area) {
 /* TODO: pas de api aan zodat deze berekening door de databank kan gebeuren */
 exports.getAllParkingForArea = function(req, res) {
     var aid = req.params.aid;
+    var uid = req.params.uid;
 
-    con.performSelect('Area', {
-        "idArea": aid
-    }, function(err, result){
-        if(err) throw err;
-        var a = result[0];
-
-        con.performSelect('ParkingSpots', {}, function(err, result){
+    if(req.user.authid != uid) {
+        res.json([{}]);
+    } else {
+        con.performSelect('Area', {
+            "idArea": aid
+        }, function(err, result){
             if(err) throw err;
-            var filtered_result = [];
-            result.forEach(e => {
-                if(isInArea(e, a)){
-                    filtered_result.push(e);
-                }
+            var a = result[0];
+
+            con.performSelect('ParkingSpots', {}, function(err, result){
+                if(err) throw err;
+                var filtered_result = [];
+                result.forEach(e => {
+                    if(isInArea(e, a)){
+                        filtered_result.push(e);
+                    }
+                });
+                res.json(filtered_result);
             });
-            res.json(filtered_result);
-        });
-    })
+        });        
+    }
 };
 
 exports.occupyParking = function(req, res) {
     var pid = req.params.id;
-    con.performSelect('ParkingSpots', {
-        "idParkingspots": pid
-    }, function(err, result){
-        if(err) throw err;
-        var r = result[0];
-        r["occupied"] = !r["occupied"];
-        con.performUpdate('Parkingspots', r, 'idParkingspots', pid, function(err){
-            res.json({"result": (err == null)});
-        });
-    });
+    var uid = req.params.uid;
+
+    if(req.user.authid != uid) {
+        res.json({"result": false});
+    } else {
+        con.performSelect('ParkingSpots', {
+            "idParkingspots": pid
+        }, function(err, result){
+            if(err) throw err;
+            var r = result[0];
+            r["occupied"] = !r["occupied"];
+            con.performUpdate('Parkingspots', r, 'idParkingspots', pid, function(err){
+                res.json({"result": (err == null)});
+            });
+        });        
+    }
 };

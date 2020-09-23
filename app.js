@@ -50,8 +50,8 @@ indexRouter.get('/parkingspot', api.parking.getAllParking);
 indexRouter.post('/parkingspot', passport.authenticate('bearer', passport_options), api.parking.createParking);
 indexRouter.get('/parkingspot/:id', api.parking.getParking);
 indexRouter.delete('/parkingspot/:id', passport.authenticate('bearer', passport_options), api.parking.deleteParking);
-indexRouter.put('/parkingspot/:id', passport.authenticate('bearer', passport_options), api.parking.occupyParking);
-indexRouter.get('/parkingspot/area/:aid', passport.authenticate('bearer', passport_options), api.parking.getAllParkingForArea);
+indexRouter.put('/parkingspot/:id/:uid', passport.authenticate('bearer', passport_options), api.parking.occupyParking);
+indexRouter.get('/parkingspot/:uid/area/:aid', passport.authenticate('bearer', passport_options), api.parking.getAllParkingForArea);
 
 console.log('Used root: ' + serverConfig["baseUrl"]);
 

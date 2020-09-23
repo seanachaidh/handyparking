@@ -8,6 +8,18 @@ console.log('loaded configuration ' + JSON.stringify(dataconfiguration));
 var mysql_connection = null
 var connected = false;
 
+function remove_value(arr, val) {
+    var retval = [];
+    var keys = Object.keys(arr);
+    for(let i = 0; i < arr.length; i++) {
+        if(keys[i] != val) {
+            retval.push(arr[i]);
+        }
+    }
+
+    return retval;
+}
+
 function createIdObj(idcol, id) {
     var retval = {};
     retval[idcol] = id;
@@ -105,7 +117,11 @@ function performInsert(table, vals, cb) {
 
 exports.performUpdate = function(table, vals, idobj, id, cb){
     mysql_connection.getConnection(function(err, connection) {
-        var set_string = createSetClause(vals);
+
+        //Avoid that the ID is updated.
+        var newvals = remove_value(vals, idobj);
+        
+        var set_string = createSetClause(newvals);
         var where_string = createWhereClause(createIdObj(idobj, id));
         var query = "update " + table + ' ' + set_string + ' ' + where_string + ';'
         console.log("Performing update query: " + query);
