@@ -8,10 +8,6 @@ console.log('loaded configuration ' + JSON.stringify(dataconfiguration));
 var mysql_connection = null
 var connected = false;
 
-function zip(a1, a2) {
-    return 
-}
-
 function createIdObj(idcol, id) {
     var retval = {};
     retval[idcol] = id;
@@ -149,7 +145,6 @@ exports.connect = connect;
 exports.disconnect = disconnect;
 exports.createWhereClause = createWhereClause;
 exports.listToString = listToString;
-exports.connect = connect;
 exports.performSelect = performSelect;
 exports.performInsert = performInsert;
 exports.removeAllFromTable = removeAllFromTable;
