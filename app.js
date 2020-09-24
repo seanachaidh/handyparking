@@ -35,7 +35,7 @@ indexRouter.put('/user/:id', passport.authenticate('bearer', passport_options), 
 
 //login route
 indexRouter.get('/login', passport.authenticate('basic', {"session": false}), function(req, res){
-    res.json({"token": req.user});
+    res.json([{"token": req.user}]);
 });
 
 //User area
