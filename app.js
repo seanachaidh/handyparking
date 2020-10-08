@@ -47,8 +47,11 @@ indexRouter.post('/login', passport.authenticate('bearer', passport_options), fu
         "valid": "0"
     }
     api.database.performUpdate('AuthTokens', vals, 'token', token, function(err) {
-        if(err) throw err;
-        res.json({"result": true});
+        if(err) {
+            res.json({"result": false});
+        } else {
+            res.json({"result": true});
+        }
     });
 
 })
