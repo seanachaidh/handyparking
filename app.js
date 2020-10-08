@@ -6,6 +6,7 @@ const BearerStrategy = require('passport-http-bearer').Strategy;
 
 const fs = require('fs');
 const passport = require('passport');
+const { bearer } = require('./api/auth');
 var configuration = JSON.parse(fs.readFileSync('env.json', 'utf-8'));
 var serverConfig = configuration["server"];
 
@@ -37,6 +38,20 @@ indexRouter.put('/user/:id', passport.authenticate('bearer', passport_options), 
 indexRouter.get('/login', passport.authenticate('basic', {"session": false}), function(req, res){
     res.json([{"token": req.user}]);
 });
+indexRouter.post('/login', passport.authenticate('bearer', passport_options), function(req, res) {
+    var authorization = req.headers["authorization"];
+    var token = authorization.split(" ")[1];
+
+    console.log("Logging out: " + token);
+    var vals = {
+        "valid": "0"
+    }
+    api.database.performUpdate('AuthTokens', vals, 'token', token, function(err) {
+        if(err) throw err;
+        res.json({"result": true});
+    });
+
+})
 
 //User area
 indexRouter.get('/user/:uid/area/:aid', passport.authenticate('bearer', passport_options), api.users.getArea);

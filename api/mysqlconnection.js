@@ -9,11 +9,11 @@ var mysql_connection = null
 var connected = false;
 
 function remove_value(arr, val) {
-    var retval = [];
+    var retval = {};
     var keys = Object.keys(arr);
-    for(let i = 0; i < arr.length; i++) {
+    for(let i = 0; i < keys.length; i++) {
         if(keys[i] != val) {
-            retval.push(arr[i]);
+            retval[keys[i]] = arr[keys[i]];
         }
     }
 

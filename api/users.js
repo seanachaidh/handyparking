@@ -79,6 +79,8 @@ exports.updateUser = function(req, res) {
                 res.json({"result": true});
             }
         });        
+    } else {
+        res.json({"result": false});
     }
 };
 
