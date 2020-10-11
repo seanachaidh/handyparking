@@ -157,6 +157,21 @@ function performSelect(table, whereclause, cb) {
 
 }
 
+function revert(req, res) {
+    mysql_connection.getConnection(function(err, connection) {
+        if(err) throw err;
+        //we got a connection. Load the file
+        var sqlfile = fs.readFileSync("datamodel.sql").toString('utf-8');
+        connection.query(sqlfile, function(err) {
+            if(err) {
+                res.json([{"success": false}]);
+            } else {
+                res.json([{"success": true}]);
+            }
+        });
+    });
+}
+
 exports.connect = connect;
 exports.disconnect = disconnect;
 exports.createWhereClause = createWhereClause;
@@ -165,3 +180,4 @@ exports.performSelect = performSelect;
 exports.performInsert = performInsert;
 exports.removeAllFromTable = removeAllFromTable;
 exports.createSetClause = createSetClause
+exports.revert = revert

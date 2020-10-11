@@ -28,6 +28,10 @@ api.database.connect(function(){
     console.log("Connection within app has been performed");
 });
 
+if(configuration.server.debugMode) {
+    indexRouter.post('/revert', api.database.revert);
+}
+
 //users
 indexRouter.get('/user', api.users.getUsers); // TODO: Verwijder dit
 indexRouter.get('/user/:id', passport.authenticate('bearer', passport_options), api.users.getUser);
