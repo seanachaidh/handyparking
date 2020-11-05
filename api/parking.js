@@ -1,3 +1,4 @@
+const e = require('express');
 const con = require('./mysqlconnection');
 
 exports.getParking = function(req, res) {
@@ -27,8 +28,19 @@ exports.deleteParking = function(req, res) {
 exports.getAllParking = function(req, res) {
     con.performSelect('ParkingSpots', {}, function(err, result){
         if(err) throw err;
-        res.json(result);
-    })    
+        var results = [];
+        result.forEach(r => {
+            results.push({
+                "idParkingSpots": r.idParkingSpots,
+                "coordinate": {
+                    "latitude": r.x,
+                    "longtitude": r.y
+                },
+                "occupied": (r.occupied == 0)?"false":"true"
+            });
+        });
+        res.json(results);
+    });
 };
 
 /* Deze functie werkt denk ik alleen maar in het noordoostelijke deel van de planeet. Ik moet dit eens uittesten */
