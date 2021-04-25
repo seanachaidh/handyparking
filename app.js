@@ -77,6 +77,8 @@ indexRouter.get('/parkingspot/:uid/area/:aid', passport.authenticate('bearer', p
 
 console.log('Used root: ' + serverConfig["baseUrl"]);
 
+app.use(express.static("public"));
+
 app.use(serverConfig["baseUrl"], indexRouter);
 
 app.listen(port, function(){

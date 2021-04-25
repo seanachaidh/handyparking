@@ -30,13 +30,16 @@ exports.getAllParking = function(req, res) {
         if(err) throw err;
         var results = [];
         result.forEach(r => {
+            var buffer = Buffer.from(r.image, 'binary');
             results.push({
                 "idParkingSpots": r.idParkingSpots,
                 "coordinate": {
                     "latitude": r.x,
                     "longtitude": r.y
                 },
-                "occupied": (r.occupied == 0)?"false":"true"
+                "occupied": (r.occupied == 0)?"false":"true",
+                'image': r.image,
+                'rating': r.rating
             });
         });
         res.json(results);

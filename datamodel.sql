@@ -115,6 +115,14 @@ CREATE TABLE IF NOT EXISTS `handyparking`.`ParkingSpots` (
   `y` DOUBLE NOT NULL,
   `idParkingSpots` INT NOT NULL AUTO_INCREMENT,
   `occupied` TINYINT NULL DEFAULT 0,
+  `image` VARCHAR(100) NULL,
+  `rating` DOUBLE DEFAULT 0.0,
+  `Users_idUsers` INT NOT NULL,
+  CONSTRAINT `fk_Users_idUsers`
+    FOREIGN KEY (`Users_idUsers`)
+    REFERENCES `handyparking`.`Users` (`idUsers`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   PRIMARY KEY (`idParkingSpots`))
 ENGINE = InnoDB;
 

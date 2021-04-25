@@ -5,3 +5,4 @@ datamodel_copy.sql
 datamodel_backup.sql
 testParkings.sql
 .DS_Store
+public/*
