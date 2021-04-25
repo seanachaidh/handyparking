@@ -4,6 +4,9 @@ const bodyParser = require('body-parser');
 const BasicStrategy = require('passport-http').BasicStrategy;
 const BearerStrategy = require('passport-http-bearer').Strategy;
 
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
 const fs = require('fs');
 const passport = require('passport');
 const { bearer } = require('./api/auth');
@@ -14,6 +17,33 @@ const port = 3000
 
 const app = express();
 var indexRouter = express.Router()
+
+
+//swagger configuratie
+const swaggerOptions = {
+    definition: {
+        openapi: "3.0.0",
+        info: {
+            title: "Handyparking swagger API",
+            version: "0.1",
+            description: "API for controlling everything in handyparking",
+            license: {
+                name: "GPL"
+            },
+            contact: {
+                name: "Pieter Van Keymeulen",
+                url: github.com/seanachaidh,
+                email: 'pvankeymeulen@seanachaidh.be'
+            }
+        },
+        servers: [
+            {
+                url: "http://localhost:3000/handyparking"
+            }
+        ]
+    },
+    apis: ['./api/api.js']
+};
 
 //middleware
 app.use(bodyParser.urlencoded());
@@ -78,6 +108,13 @@ indexRouter.get('/parkingspot/:uid/area/:aid', passport.authenticate('bearer', p
 console.log('Used root: ' + serverConfig["baseUrl"]);
 
 app.use(express.static("public"));
+
+//Setting up swagger
+app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerJsDoc(swaggerOptions))
+);
 
 app.use(serverConfig["baseUrl"], indexRouter);
 
