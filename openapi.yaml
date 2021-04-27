@@ -1,0 +1,204 @@
+openapi: 3.0.0
+info:
+  title: "Handyparking API"
+  description: "Dit is de api voor handyparking"
+  version: "1.0"
+  
+components:
+  schemas:
+    User:
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        guide:
+          type: boolean
+      required:
+        - name
+        - email
+        - guide
+    Area:
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        first:
+          $ref: "#/components/schemas/Coordinate"
+        second:
+          $ref: "#/components/schemas/Coordinate"
+      required:
+        - name
+        - first
+        - second
+    Coordinate:
+      properties:
+        longtitude:
+          type: number
+        latitude:
+          type: number
+      required:
+        - longtitude
+        - latitude
+    Parkingspot:
+      properties:
+        image:
+          type: string
+        occupied:
+          type: boolean
+        rating:
+          type: number
+        coordinate:
+          $ref: "#/components/schemas/Coordinate"
+        user:
+          $ref: "#/components/schemas/User"
+    Retval:
+      properties:
+        id:
+          type: string
+        success:
+          type: boolean
+        errors:
+          type: string
+      required:
+        - success
+paths:
+  /handyparking/users/{id}:
+    get:
+      summary: "Haal een specifieke user op"
+      description: "haalt een user op"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "Het id van de gebruiker"
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: "Een gebruiker"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /handyparking/users:
+    post:
+      summary: "Maak een nieuwe gebruiker aan"
+      description: "Deze functie maakt een nieuwe gebruiker aan"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: "Er werd een nieuwe gebruiker aangemaakt"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Retval'
+  /handyparking/users/{uid}/area/{aid}:
+    get:
+      summary: "Haal een gebied op"
+      description: "Dit haalt het gebied van een gebruiker op"
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: "het id van de gebruiker"
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+        - name: aid
+          in: path
+          description: "Het id van het het gebied"
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: "Het gevonden gebied"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Area'
+  /handyparking/users/{uid}/area:
+    post:
+      summary: "maak een nieuw gebied aan"
+      description: "Dit maakt een nieuw gebied aan"
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: "De id van de gebruiker"
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Area'
+      responses:
+        '201':
+          description: "Is het gelukt of niet?"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Retval'
+  /handyparking/parkingspot:
+    get:
+      summary: "Geef alle parkings terug"
+      description: "Dit geeft alle parkings terug"
+      responses:
+        '200':
+          description: "Alle parkings die er gevonden zijn in de databank"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Parkingspot"
+    post:
+      summary: "Maak een nieuwe parkeerplaats aan"
+      description: "Dit maakt een nieuwe parkeerplaats aan"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Parkingspot"
+      responses:
+        '201':
+          description: "Is het gelukt of niet"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Retval"
+  /handyparking/parkingspot/{id}:
+    get:
+      summary: "Geef een specifieke parking terug"
+      parameters:
+        - name: "id"
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: "De gevonden parkeerplaats"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Parkingspot"
