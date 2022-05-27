@@ -7,7 +7,6 @@ const BearerStrategy = require('passport-http-bearer').Strategy;
 
 const fs = require('fs');
 const passport = require('passport');
-const { bearer } = require('./api/auth');
 var configuration = JSON.parse(fs.readFileSync('env.json', 'utf-8'));
 var serverConfig = configuration["server"];
 
@@ -17,7 +16,7 @@ const app = express();
 var indexRouter = express.Router()
 
 //middleware
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.json());
 
 //passport
 passport.use(new BasicStrategy(api.auth.basic));
